@@ -239,7 +239,7 @@ WHERE inspections.business_id IS NULL;
 Notice when running the LEFT JOIN query you get the same results as you did when running the NOT IN query.
 These queries are 100% equivalent (by definition),
 and so guaranteed to always generate the same results.
-Unfortunately, the latter query is much slower.
+Unfortunately, the former query is much slower.
 For me, it took 12 seconds---a slowdown of roughly 1 million times!
 
 Why?
