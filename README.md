@@ -213,7 +213,7 @@ Notice that both queries above ran very fast.
 SQLite provides a built-in timer to measure how fast queries run.
 Enable it by running the dot command
 ```
-.timing on
+.timer on
 ```
 Then rerun the counting query above.
 The last line of the output should look something like
