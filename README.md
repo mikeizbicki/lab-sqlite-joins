@@ -146,7 +146,7 @@ Why?
 
 We will soon see that the answer is due to SQLite being *weakly typed*.
 ([The authors of SQLite consider this terminology derogatory and prefer the more pleasant sounding *flexibly typed*](https://www.sqlite.org/quirks.html)).
-Recall that begin weakly typed means that any column can contain any type,
+Recall that being weakly typed means that any column can contain any type,
 even if the schema states that it should contain a different type.
 This is bad because it can result in incorrect behavior without giving appropriate warnings/errors.
 
