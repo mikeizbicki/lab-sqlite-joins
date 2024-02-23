@@ -6,7 +6,8 @@ The general consensus in industry is that it's basically never wrong to store yo
 
 This lab will review:
 1. strengths of SQLite (easy to distribute databases),
-1. weaknesses of SQLite (weak typing, sometimes slow, missing SQL syntax), and
+1. weaknesses of SQLite (weak typing, sometimes slow, missing SQL syntax),
+1. navigating unfamiliar databases, and
 1. LEFT JOIN and the NOT IN operations.
 
 ## Background
@@ -71,7 +72,8 @@ sqlite> select * from violations limit 10;
 | 10          | 20160503 | 103103          | High Risk     | High risk food holding temperature                 |
 | 10          | 20160503 | 103148          | Low Risk      | No thermometers or uncalibrated thermometers       |
 ```
-Business 10 definitely looks like a place I don't want to eat, with its "high risk vermin infestation".
+Business 10 apparently has a lot of problems.
+The "high risk vermin infestation" looks particularly bad.
 I wonder what business this is?
 
 To find out, we can use a simple inner join.
@@ -98,7 +100,7 @@ CREATE TABLE businesses (
 	owner_zip VARCHAR(15)
 );
 ```
-Inspecting this schema, it looks like the `name` field contains the information I want.
+Inspecting this schema, it looks like the `name` field contains the information we want.
 
 The following JOIN will place the name of each business next to their infractions.
 ```
