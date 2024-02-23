@@ -15,7 +15,7 @@ Each CSV/JSON file in the original dataset would correspond to one table in the 
 
 The general consensus in the industry these days is that it's basically never wrong to store your data in SQLite.
 
-<img src=sqlite-meme.jpg width=400px />
+<img src=sqlite-meme.jpg width=300px />
 
 For this lab, we will use sqlite3 to explore the "San Francisco Restaurant Health Inspections Dataset".
 This dataset contains records of health inspection violations between 2013-2016 in San Francisco restaurants.
