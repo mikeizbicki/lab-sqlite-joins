@@ -240,7 +240,7 @@ Notice when running the LEFT JOIN query you get the same results as you did when
 These queries are 100% equivalent (by definition),
 and so guaranteed to always generate the same results.
 Unfortunately, the latter query is much slower.
-For me, it was 12 seconds---a slowdown of roughly 1 million times!
+For me, it took 12 seconds---a slowdown of roughly 1 million times!
 
 Why?
 
