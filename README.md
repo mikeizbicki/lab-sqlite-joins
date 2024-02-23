@@ -1,4 +1,4 @@
-# Lab: SQLite and JOINs
+# Lab: SQLite, Subqueries, and JOINs
 
 The general consensus in industry is that it's basically never wrong to store your data in SQLite.
 
