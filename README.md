@@ -3,7 +3,7 @@
 This lab will review:
 1. strengths of SQLite (easy to distribute databases)
 1. weaknesses of SQLite (weak typing, sometimes slow)
-1. outer joins
+1. LEFT JOIN and the NOT IN operations
 
 ## Background
 
@@ -11,7 +11,11 @@ We've seen before that datasets are often distributed as JSON files or CSV files
 For complicated datasets, however, this can be inconvenient.
 For example, some datasets might require many CSV files to store the entire dataset.
 One common use of SQLite is to distribute these datasets as a single file.
-(Each CSV/JSON file would correspond to one table in the database file.)
+Each CSV/JSON file in the original dataset would correspond to one table in the SQLite database file.
+
+The general consensus in the industry these days is that it's basically never wrong to store your data in SQLite.
+
+<img src=meme-sqlite.jpg width=400px />
 
 For this lab, we will use sqlite3 to explore the "San Francisco Restaurant Health Inspections Dataset".
 This dataset contains records of health inspection violations between 2013-2016 in San Francisco restaurants.
@@ -239,11 +243,17 @@ Why?
 
 SQLite is an *embedded database*.
 This means that it is intentionally designed to be much simpler than other other database engines
-so that it can easily be embedded in other applications.
-(Recall that SQLite [is likely the world's most widely deployed software](https://www.sqlite.org/mostdeployed.html), and one of the reasons for this is the easy with which it can be included in other programs.)
+in order to be *embedded* in other applications.
+(Recall that SQLite [is likely the world's most widely deployed software](https://www.sqlite.org/mostdeployed.html),
+and one of the reasons for this is the easy with which it can be included in other programs.)
+
 One of the ways that SQLite is intentionally simpler is that it does not include an advanced *query optimizer* that can convert SQL expressions into more efficient forms.
 Other databases (like Postgres) can easily optimize both SQL queries into equally efficient forms.
 We will talk about query optimization in more detail after the midterm.
+
+<!--
+<img src=sqlite-meme2.webp width=400px>
+-->
 
 ### One Final SQLite Oddity
 
@@ -283,7 +293,7 @@ and so it generates an error.
 ## Your Final Task
 
 Let's pretend you're a data analysis working for the city of San Francisco.
-You've been tasked finding the number of businesses who have been inspected by the health inspector and never had a violation.
+You've been tasked with finding the number of businesses who have been inspected by the health inspector and never had a violation.
 As a first pass, you've written the following SQL query.
 ```
 SELECT count(*)
@@ -310,7 +320,8 @@ Your idea is that:
 1. the NOT IN clause ensures that the business has not had any violations.
 
 Unfortunately, the query above is wrong.
-The query above returns the number 2183, but the correct number is 860.
+The query above returns the number 2183,
+but the correct number is 860.
 
 Your task is to debug and fix the query above.
 
