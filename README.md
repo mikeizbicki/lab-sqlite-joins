@@ -5,9 +5,9 @@ The general consensus in industry is that it's basically never wrong to store yo
 <img src=sqlite-meme.jpg width=300px />
 
 This lab will review:
-1. strengths of SQLite (easy to distribute databases)
-1. weaknesses of SQLite (weak typing, sometimes slow, missing SQL syntax)
-1. LEFT JOIN and the NOT IN operations
+1. strengths of SQLite (easy to distribute databases),
+1. weaknesses of SQLite (weak typing, sometimes slow, missing SQL syntax), and
+1. LEFT JOIN and the NOT IN operations.
 
 ## Background
 
