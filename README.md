@@ -254,6 +254,9 @@ One of the ways that SQLite is intentionally simpler is that it does not include
 Other databases (like Postgres) can easily optimize both SQL queries into equally efficient forms.
 We will talk about query optimization in more detail after the midterm.
 
+We will see how and why the NOT IN query used an $O(n \log n)$ algorithm,
+but the LEFT JOIN query used an $O(n^2)$ algorithm.
+
 <!--
 <img src=sqlite-meme2.webp width=400px>
 -->
