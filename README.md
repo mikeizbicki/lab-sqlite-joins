@@ -327,7 +327,7 @@ Your idea is that:
 
 Unfortunately, the query above is wrong.
 The query above returns the number 2183,
-but the correct number is 860.
+but the correct number is 854.
 
 Your task is to debug and fix the query above.
 
