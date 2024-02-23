@@ -102,7 +102,7 @@ CREATE TABLE businesses (
 ```
 Inspecting this schema, it looks like the `name` field contains the information we want.
 
-The following JOIN will place the name of each business next to their infractions.
+The following JOIN will place the name of each business next to their violation.
 ```
 sqlite> SELECT name, violations.*
    ...> FROM businesses
