@@ -1,8 +1,12 @@
 # Lab: SQLite and JOINs
 
+The general consensus in industry is that it's basically never wrong to store your data in SQLite.
+
+<img src=sqlite-meme.jpg width=300px />
+
 This lab will review:
 1. strengths of SQLite (easy to distribute databases)
-1. weaknesses of SQLite (weak typing, sometimes slow)
+1. weaknesses of SQLite (weak typing, sometimes slow, missing SQL syntax)
 1. LEFT JOIN and the NOT IN operations
 
 ## Background
@@ -12,10 +16,6 @@ For complicated datasets, however, this can be inconvenient.
 For example, some datasets might require many CSV files to store the entire dataset.
 One common use of SQLite is to distribute these datasets as a single file.
 Each CSV/JSON file in the original dataset would correspond to one table in the SQLite database file.
-
-The general consensus in the industry these days is that it's basically never wrong to store your data in SQLite.
-
-<img src=sqlite-meme.jpg width=300px />
 
 For this lab, we will use sqlite3 to explore the "San Francisco Restaurant Health Inspections Dataset".
 This dataset contains records of health inspection violations between 2013-2016 in San Francisco restaurants.
