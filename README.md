@@ -328,6 +328,9 @@ Your idea is that:
 Unfortunately, the query above is wrong.
 The query above returns the number 2183,
 but the correct number is 854.
+(Due to errors in the way the data was entered,
+it's also possible to have a correct SQL query that returns 860.
+If your query returns either number, it will get full credit.)
 
 Your task is to debug and fix the query above.
 
