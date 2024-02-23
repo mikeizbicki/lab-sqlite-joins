@@ -73,7 +73,8 @@ sqlite> select * from violations limit 10;
 | 10          | 20160503 | 103148          | Low Risk      | No thermometers or uncalibrated thermometers       |
 ```
 Business 10 apparently has a lot of problems.
-The "high risk vermin infestation" looks particularly bad.
+The "high risk vermin infestation" looks particularly bad,
+and I definitely wouldn't want to eat at restaurant with rats in the kitchen.
 I wonder what business this is?
 
 To find out, we can use a simple inner join.
