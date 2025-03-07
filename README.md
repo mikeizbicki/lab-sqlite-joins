@@ -7,8 +7,8 @@ The general consensus in industry is that it's basically never wrong to store yo
 This lab will review:
 1. strengths of SQLite (easy to distribute databases),
 1. weaknesses of SQLite (weak typing, sometimes slow, missing SQL syntax),
-1. navigating unfamiliar databases, and
-1. LEFT JOIN and the NOT IN operations.
+1. the LEFT JOIN and the NOT IN operations, and
+1. how to navigating unfamiliar databases.
 
 ## Background
 
@@ -232,9 +232,38 @@ WHERE inspections.business_id IS NULL;
 ```
 
 > **NOTE:**
-> If it's not clear why the LEFT JOIN above is equivalent to the NOT IN query,
-> that's okay.
-> We will cover the relationship between outer joins and subqueries in detail in our next lecture.
+> Recall that JOIN (or equivalently INNER JOIN) is syntactic sugar over the cross join plus a condition.
+> That is, the following two statements are equivalent:
+>
+>     SELECT * FROM a JOIN b ON (condition);
+>     SELECT * FROM a INNER JOIN b ON (condition);
+>     SELECT * FROM a,b WHERE condition;
+>
+> Similarly, LEFT JOIN (or LEFT OUTER JOIN) is syntactic sugar for an INNER JOIN plus a set operation.
+> The left outer join given by
+>
+>     SELECT * FROM a LEFT JOIN b ON (condition);
+>
+> is equivalent to
+>
+>     SELECT * FROM a JOIN b ON (condition)
+>     UNION ALL
+>     (
+>     SELECT a.*,NULL,NULL,NULL,... FROM a         -- there should be one NULL for each column in b
+>     EXCEPT ALL
+>     SELECT a.*,NULL,NULL,NULL,... FROM a JOIN b ON (condition)
+>     );
+>
+> When `condition` is an equality of the form `a.c1=b.c2` and there are no NULL values,
+> then the LEFT JOIN is also equivalent to the simpler to understand subquery:
+>
+>     SELECT * FROM a JOIN b ON (a.c1 = b.c2)
+>     UNION ALL
+>     SELECT * FROM a WHERE a.c1 NOT IN (SELECT b.c2 FROM b);
+>
+> We will cover these equivalences in class next Tuesday,
+> and you will be responsible for them for your quiz on Thursday.
+> It's okay if they don't make 100% sense right now.
 
 Notice when running the LEFT JOIN query you get the same results as you did when running the NOT IN query.
 These queries are 100% equivalent (by definition),
