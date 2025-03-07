@@ -145,7 +145,7 @@ For example, 9948 comes before 999 in the `business_id` column.
 Why?
 
 We will soon see that the answer is due to SQLite being *weakly typed*.
-([The authors of SQLite consider this terminology derogatory and prefer the more pleasant sounding *flexibly typed*](https://www.sqlite.org/quirks.html)).
+([The author of SQLite consider this terminology derogatory and prefer the more pleasant sounding *flexibly typed*](https://www.sqlite.org/quirks.html).)
 Recall that being weakly typed means that any column can contain any type,
 even if the schema states that it should contain a different type.
 This is bad because it can result in incorrect behavior without giving appropriate warnings/errors.
@@ -234,7 +234,7 @@ WHERE inspections.business_id IS NULL;
 > **NOTE:**
 > If it's not clear why the LEFT JOIN above is equivalent to the NOT IN query,
 > that's okay.
-> I goofed up the explanation in class, and we'll cover this transformation again next week on Tuesday.
+> We will cover the relationship between outer joins and subqueries in detail in our next lecture.
 
 Notice when running the LEFT JOIN query you get the same results as you did when running the NOT IN query.
 These queries are 100% equivalent (by definition),
@@ -252,14 +252,9 @@ and one of the reasons for this is the easy with which it can be included in oth
 
 One of the ways that SQLite is intentionally simpler is that it does not include an advanced *query optimizer* that can convert SQL expressions into more efficient forms.
 Other databases (like Postgres) can easily optimize both SQL queries into equally efficient forms.
-We will talk about query optimization in more detail after the midterm.
-
+We will talk about query optimization in more detail after spring break.
 We will see how and why the NOT IN query used an $O(n \log n)$ algorithm,
 but the LEFT JOIN query used an $O(n^2)$ algorithm.
-
-<!--
-<img src=sqlite-meme2.webp width=400px>
--->
 
 ### One Final SQLite Oddity
 
