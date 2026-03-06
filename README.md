@@ -260,10 +260,6 @@ WHERE inspections.business_id IS NULL;
 >     SELECT * FROM a JOIN b ON (a.c1 = b.c2)
 >     UNION ALL
 >     SELECT * FROM a WHERE a.c1 NOT IN (SELECT b.c2 FROM b);
->
-> We will cover these equivalences in class next Tuesday,
-> and you will be responsible for them for your quiz on Thursday.
-> It's okay if they don't make 100% sense right now.
 
 Notice when running the LEFT JOIN query you get the same results as you did when running the NOT IN query.
 These queries are 100% equivalent (by definition),
@@ -358,7 +354,7 @@ If your query returns either number, it will get full credit.)
 
 Your task is to debug and fix the query above.
 
-Copy/paste the fixed query into sakai to receive credit for the lab.
+Copy/paste the fixed query into canvas to receive credit for the lab.
 
 <!--
 SELECT count(DISTINCT business_id)
