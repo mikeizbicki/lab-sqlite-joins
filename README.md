@@ -145,7 +145,7 @@ For example, 9948 comes before 999 in the `business_id` column.
 Why?
 
 We will soon see that the answer is due to SQLite being *weakly typed*.
-([The author of SQLite consider this terminology derogatory and prefer the more pleasant sounding *flexibly typed*](https://www.sqlite.org/quirks.html).)
+([The author of SQLite considers this terminology derogatory and prefers the more pleasant sounding *flexibly typed*](https://www.sqlite.org/quirks.html).)
 Recall that being weakly typed means that any column can contain any type,
 even if the schema states that it should contain a different type.
 This is bad because it can result in incorrect behavior without giving appropriate warnings/errors.
@@ -233,7 +233,7 @@ WHERE inspections.business_id IS NULL;
 
 > **NOTE:**
 > Recall that JOIN (or equivalently INNER JOIN) is syntactic sugar over the cross join plus a condition.
-> That is, the following two statements are equivalent:
+> That is, the following three statements are equivalent:
 >
 >     SELECT * FROM a JOIN b ON (condition);
 >     SELECT * FROM a INNER JOIN b ON (condition);
