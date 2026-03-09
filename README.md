@@ -318,7 +318,7 @@ and so it generates an error.
 
 ## Your Final Task
 
-Let's pretend you're a data analysis working for the city of San Francisco.
+Let's pretend you're a data analyst working for the city of San Francisco.
 You've been tasked with finding the number of businesses who have been inspected by the health inspector and never had a violation.
 As a first pass, you've written the following SQL query.
 ```
