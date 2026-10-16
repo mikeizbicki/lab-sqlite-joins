@@ -2,7 +2,7 @@
 
 The general consensus in industry is that it's basically never wrong to store your data in SQLite.
 
-<img src=sqlite-meme.jpg width=300px />
+<img src=img/sqlite-meme.jpg width=300px />
 
 This lab will review:
 1. strengths of SQLite (easy to distribute databases),
@@ -157,7 +157,7 @@ SELECT name, typeof(business_id), violations.*
 FROM violations
 JOIN businesses USING (business_id)
 ORDER BY business_id;
-``` 
+```
 You should see that the type of most columns is `text`.
 If you re-run the `.schema businesses` command, however,
 you'll see that the type of these variables should be `INTEGER`.
@@ -169,6 +169,10 @@ the ORDER BY clause sorts ASCIIbetically instead of numerically like we expected
 > and this dataset has basic "errors" in it like confusing integers and strings.
 > One of your takeaways from this lab should be that no human is perfect.
 > You therefore shouldn't trust that even highly credentialed people like Stanford professors are handling their data correctly.
+>
+> Also, even though sqlite3 is generally awesome,
+>
+> <img src=img/worst.png width=300px />
 
 In order to get the expected sorting behavior,
 you need to cast the `business_id` to an `INTEGER` before sorting.
@@ -197,6 +201,23 @@ WHERE business_id NOT IN (
 ```
 That's a lot of businesses!
 
+> **NOTE:**
+> Recall that the IN operator is syntactic sugar over a chain of OR and = operators,
+> and that these boolean operators react in surprising ways with NULL values---
+> a single NULL value in the subquery will prevent the IN operator from every returning TRUE.
+> That is why the `WHERE business_id IS NOT NULL` is included in the subquery above.
+> We can also work around this oddity of NULL by using the NOT EXISTS operator instead of NOT IN.
+> The following query is equivalent:
+> ```sql
+> SELECT b.business_id, b.name
+> FROM businesses b
+> WHERE NOT EXISTS (
+>     SELECT 1
+>     FROM inspections i
+>     WHERE CAST(i.business_id AS INTEGER) = b.business_id
+> );
+> ```
+
 How many?
 
 Let's count them by changing the column list to `count(*)`.
@@ -221,9 +242,71 @@ The last line of the output should look something like
 Run Time: real 0.017 user 0.014570 sys 0.002421
 ```
 The `real` time is the number of seconds elapsed, and the number we're interested in.
-This is a fast query, running in only 17 milliseconds.
+This is a fast query, running in only 17 milliseconds for me.
 
-We will now rewrite this query as an equivalent LEFT JOIN.
+### The anti-join
+
+The NOT IN query above is sometimes called an *anti-join* because it finds all of the rows in one table that have no matching rows in another table.
+and this is the opposite of a JOIN.
+
+To see this in more detail, lets modify the query above to replace the NOT IN with an IN operator;
+the result is
+```
+SELECT count(*)
+FROM businesses
+WHERE business_id IN (
+    SELECT business_id
+    FROM inspections
+    WHERE business_id IS NOT NULL
+    );
+```
+and this query can be equivalently written with a standard JOIN:
+```
+SELECT count(DISTINCT business_id)
+FROM businesses
+JOIN inspections USING (business_id);
+```
+You should take a minute to convince yourself that these two queries are always equal to each other.
+Observe:
+1. the `WHERE business_id IS NOT NULL` clause in the sub-query version matches the behavior of how NULL values will be treated in the USING condition
+2. The DISTINCT in the second query is necessary because one business might have many inspections.
+    The JOIN will add one row for each violation that matches a business,
+    but the original IN subquery syntax did not add duplicates.
+
+The takeaway from this section is that the IN query above gives us is giving us a JOIN,
+and so the NOT IN gives us the "anti-join".
+There is no keyword for anti-joins in sql,
+but the LEFT JOIN is commonly used when performing anti-joins.
+
+### From subquery to LEFT JOIN
+
+> **NOTE:**
+> We have not yet studied in class the LEFT OUTER JOIN,
+> and so this part of the lab will get you practicing "learning how to learn"
+> on your own by reading tutorials.
+> This section will only cover LEFT JOINs on equality conditions;
+> in class we will cover the more complicated and fully correct definition on any condition type.
+
+The intuitive idea of a LEFT JOIN is that it does everything an INNER JOIN does and then concatenates "the anti-join".
+
+A bit more formally, the left outer join given by
+
+    SELECT * FROM a LEFT JOIN b ON (a.c1 = b.c2);
+
+is syntactic sugar for
+
+    SELECT * FROM a JOIN b ON (a.c1 = b.c2)
+    UNION ALL
+    SELECT a.*, NULL, ..., NULL FROM a 
+    WHERE a.c1 IS NULL OR a.c1 NOT IN (
+        SELECT b.c2 FROM b
+        WHERE b.c2 IS NOT NULL
+        );
+
+Observe that the bottom part below is exactly the anti-join that we're trying to compute with a bunch of NULL columns added
+(one for each column in the `b` table).
+
+Therefore, to actually get the anti-join, we can add a WHERE clause that finds all of the rows with the `business_id` column equal `NULL`.
 ```
 SELECT count(*)
 FROM businesses
@@ -231,38 +314,8 @@ LEFT JOIN inspections USING (business_id)
 WHERE inspections.business_id IS NULL;
 ```
 
-> **NOTE:**
-> Recall that JOIN (or equivalently INNER JOIN) is syntactic sugar over the cross join plus a condition.
-> That is, the following three statements are equivalent:
->
->     SELECT * FROM a JOIN b ON (condition);
->     SELECT * FROM a INNER JOIN b ON (condition);
->     SELECT * FROM a,b WHERE condition;
->
-> Similarly, LEFT JOIN (or LEFT OUTER JOIN) is syntactic sugar for an INNER JOIN plus a set operation.
-> The left outer join given by
->
->     SELECT * FROM a LEFT JOIN b ON (condition);
->
-> is equivalent to
->
->     SELECT * FROM a JOIN b ON (condition)
->     UNION ALL
->     (
->     SELECT a.*,NULL,NULL,NULL,... FROM a         -- there should be one NULL for each column in b
->     EXCEPT ALL
->     SELECT a.*,NULL,NULL,NULL,... FROM a JOIN b ON (condition)
->     );
->
-> When `condition` is an equality of the form `a.c1=b.c2` and there are no NULL values,
-> then the LEFT JOIN is also equivalent to the simpler to understand subquery:
->
->     SELECT * FROM a JOIN b ON (a.c1 = b.c2)
->     UNION ALL
->     SELECT * FROM a WHERE a.c1 NOT IN (SELECT b.c2 FROM b);
-
 Notice when running the LEFT JOIN query you get the same results as you did when running the NOT IN query.
-These queries are 100% equivalent (by definition),
+These queries are equivalent (by definition),
 and so guaranteed to always generate the same results.
 Unfortunately, the former query is much slower.
 For me, it took 12 seconds---a slowdown of roughly 1 million times!
@@ -272,19 +325,19 @@ Why?
 SQLite is an *embedded database*.
 This means that it is intentionally designed to be much simpler than other other database engines
 in order to be *embedded* in other applications.
-(Recall that SQLite [is likely the world's most widely deployed software](https://www.sqlite.org/mostdeployed.html),
+(Recall that sqlite [is likely the world's most widely deployed software](https://www.sqlite.org/mostdeployed.html) with more than $1\times10^{12}$ production sqlite databases,
 and one of the reasons for this is the easy with which it can be included in other programs.)
 
 One of the ways that SQLite is intentionally simpler is that it does not include an advanced *query optimizer* that can convert SQL expressions into more efficient forms.
 Other databases (like Postgres) can easily optimize both SQL queries into equally efficient forms.
 We will talk about query optimization in more detail after spring break.
-We will see how and why the NOT IN query used an $O(n \log n)$ algorithm,
-but the LEFT JOIN query used an $O(n^2)$ algorithm.
+We will see how and why the NOT IN query used an $\Theta(n \log n)$ algorithm,
+but the LEFT JOIN query used an $\Theta(n^2)$ algorithm.
 
 ### One Final SQLite Oddity
 
 Another weakness of SQLite is that it does not have full support for set operations.
-The following query, for example, would be equivalent to the NOT IN and LEFT JOIN count queries above.
+The following query, for example, would be equivalent to the queries above.
 ```
 SELECT count(*)
 FROM (
@@ -296,7 +349,6 @@ FROM (
 But sqlite3 does not support the `EXCEPT ALL` operator,
 and so it generates an error.
 
-<!--
 > **NOTE:**
 > SQLite does in fact support the EXCEPT operator.
 > And the only difference between EXCEPT and EXCEPT ALL is that the former removes duplicates.
@@ -314,7 +366,8 @@ and so it generates an error.
 > You will get very inaccurate results.
 > Nothing will be removed because the type of the `business_id` in `inspections` is `text`,
 > and the type in `businesses` is `integer`.
--->
+>
+> <img src=img/worst.png width=300px />
 
 ## Your Final Task
 
